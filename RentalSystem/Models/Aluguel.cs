@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentalSystem.Models
@@ -34,13 +35,16 @@ namespace RentalSystem.Models
         [Required]
         public int ClienteId { get; set; }
         [ForeignKey("ClienteId")]
-        public Cliente Cliente { get; set; }
+        [JsonIgnore]
+        public Cliente? Cliente { get; set; }
 
         [Required]
         public int VeiculoId { get; set; }
         [ForeignKey("VeiculoId")]
-        public Veiculo Veiculo { get; set; }
+        [JsonIgnore]
+        public Veiculo? Veiculo { get; set; }
 
-        public ICollection<Pagamento> Pagamentos { get; set; }
+        [JsonIgnore]
+        public ICollection<Pagamento>? Pagamentos { get; set; }
     }
 }

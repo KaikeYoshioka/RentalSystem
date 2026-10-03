@@ -1,4 +1,3 @@
-﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalSystem.Data;
@@ -20,9 +19,10 @@ namespace RentalSystem.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
+                if (!await _context.Alugueis.AnyAsync(a => a.Id == pagamento.AluguelId)) return BadRequest("Aluguel não existe.");
                 _context.Pagamentos.Add(pagamento);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetPagamento), new { id = pagamento.Id }, pagamento);
+                return Ok(pagamento);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
@@ -56,14 +56,11 @@ namespace RentalSystem.Controllers
             if (id != pagamento.Id) return BadRequest("IDs divergentes.");
             try
             {
+                if (!await _context.Pagamentos.AnyAsync(p => p.Id == id)) return NotFound("Pagamento não encontrado.");
+                if (!await _context.Alugueis.AnyAsync(a => a.Id == pagamento.AluguelId)) return BadRequest("Aluguel não existe.");
                 _context.Entry(pagamento).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return Ok("Pagamento atualizado!");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Pagamentos.Any(e => e.Id == id)) return NotFound();
-                throw;
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }

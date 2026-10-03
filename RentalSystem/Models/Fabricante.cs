@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RentalSystem.Models
 {
@@ -10,9 +11,10 @@ namespace RentalSystem.Models
 
         [Required(ErrorMessage = "O nome do fabricante é obrigatório.")]
         [StringLength(100)]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
        
-        public ICollection<Veiculo> Veiculos { get; set; }
+        [JsonIgnore]
+        public ICollection<Veiculo>? Veiculos { get; set; }
     }
 }

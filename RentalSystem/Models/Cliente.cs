@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RentalSystem.Models
 {
@@ -10,17 +11,18 @@ namespace RentalSystem.Models
 
         [Required]
         [StringLength(150)]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
         [Required]
         [StringLength(14)] // 000.000.000-00
-        public string Cpf { get; set; }
+        public string Cpf { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]
         [StringLength(150)]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public ICollection<Aluguel> Alugueis { get; set; }
+        [JsonIgnore]
+        public ICollection<Aluguel>? Alugueis { get; set; }
     }
 }

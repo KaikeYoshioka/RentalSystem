@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalSystem.Data;
 using RentalSystem.Models;
@@ -19,9 +19,11 @@ namespace RentalSystem.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
+                if (!await _context.Clientes.AnyAsync(c => c.Id == aluguel.ClienteId)) return BadRequest("Cliente não existe.");
+                if (!await _context.Veiculos.AnyAsync(v => v.Id == aluguel.VeiculoId)) return BadRequest("Veículo não existe.");
                 _context.Alugueis.Add(aluguel);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetAluguel), new { id = aluguel.Id }, aluguel);
+                return Ok(aluguel);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
@@ -55,14 +57,12 @@ namespace RentalSystem.Controllers
             if (id != aluguel.Id) return BadRequest("IDs divergentes.");
             try
             {
+                if (!await _context.Alugueis.AnyAsync(a => a.Id == id)) return NotFound("Aluguel não encontrado.");
+                if (!await _context.Clientes.AnyAsync(c => c.Id == aluguel.ClienteId)) return BadRequest("Cliente não existe.");
+                if (!await _context.Veiculos.AnyAsync(v => v.Id == aluguel.VeiculoId)) return BadRequest("Veículo não existe.");
                 _context.Entry(aluguel).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return Ok("Aluguel atualizado!");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Alugueis.Any(e => e.Id == id)) return NotFound();
-                throw;
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }

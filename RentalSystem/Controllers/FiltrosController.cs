@@ -25,7 +25,7 @@ namespace RentalSystem.Controllers
                         v.Id,
                         v.Modelo,
                         v.AnoFabricacao,
-                        Fabricante = v.Fabricante.Nome
+                        Fabricante = v.Fabricante!.Nome
                     }).ToListAsync();
                 return Ok(veiculos);
             }
@@ -45,8 +45,8 @@ namespace RentalSystem.Controllers
                     {
                         IdAluguel = a.Id,
                         DataInicio = a.DataInicio,
-                        ClienteNome = a.Cliente.Nome,
-                        VeiculoModelo = a.Veiculo.Modelo,
+                        ClienteNome = a.Cliente!.Nome,
+                        VeiculoModelo = a.Veiculo!.Modelo,
                         ValorTotal = a.ValorTotal
                     }).ToListAsync();
                 return Ok(alugueis);
@@ -89,8 +89,8 @@ namespace RentalSystem.Controllers
                     .Select(a => new
                     {
                         a.Id,
-                        Cliente = a.Cliente.Nome,
-                        Veiculo = a.Veiculo.Modelo,
+                        Cliente = a.Cliente!.Nome,
+                        Veiculo = a.Veiculo!.Modelo,
                         a.DataFimPrevista
                     }).ToListAsync();
                 return Ok(pendentes);

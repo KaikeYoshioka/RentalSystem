@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalSystem.Data;
 using RentalSystem.Models;
@@ -19,9 +19,10 @@ namespace RentalSystem.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
+                if (await _context.Clientes.AnyAsync(c => c.Cpf == cliente.Cpf)) return Conflict("CPF já cadastrado.");
                 _context.Clientes.Add(cliente);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, cliente);
+                return Ok(cliente);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
@@ -55,14 +56,11 @@ namespace RentalSystem.Controllers
             if (id != cliente.Id) return BadRequest("IDs divergentes.");
             try
             {
+                if (!await _context.Clientes.AnyAsync(c => c.Id == id)) return NotFound("Cliente não encontrado.");
+                if (await _context.Clientes.AnyAsync(c => c.Cpf == cliente.Cpf && c.Id != id)) return Conflict("CPF já cadastrado.");
                 _context.Entry(cliente).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return Ok("Cliente atualizado!");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Clientes.Any(e => e.Id == id)) return NotFound("Cliente não encontrado.");
-                throw;
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }

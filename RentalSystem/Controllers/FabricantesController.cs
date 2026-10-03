@@ -1,4 +1,4 @@
-﻿using RentalSystem.Data;
+using RentalSystem.Data;
 using RentalSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +55,7 @@ namespace RentalSystem.Controllers
             if (id != fabricante.Id) return BadRequest("IDs divergentes.");
             try
             {
+                if (!await _context.Fabricantes.AnyAsync(f => f.Id == id)) return NotFound("Fabricante não encontrado.");
                 _context.Entry(fabricante).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return Ok(fabricante);

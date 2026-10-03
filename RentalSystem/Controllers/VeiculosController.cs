@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentalSystem.Data;
 using RentalSystem.Models;
@@ -19,9 +19,10 @@ namespace RentalSystem.Controllers
             try
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
+                if (!await _context.Fabricantes.AnyAsync(f => f.Id == veiculo.FabricanteId)) return BadRequest("Fabricante não existe.");
                 _context.Veiculos.Add(veiculo);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetVeiculo), new { id = veiculo.Id }, veiculo);
+                return Ok(veiculo);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
@@ -55,14 +56,11 @@ namespace RentalSystem.Controllers
             if (id != veiculo.Id) return BadRequest("IDs divergentes.");
             try
             {
+                if (!await _context.Veiculos.AnyAsync(v => v.Id == id)) return NotFound("Veículo não encontrado.");
+                if (!await _context.Fabricantes.AnyAsync(f => f.Id == veiculo.FabricanteId)) return BadRequest("Fabricante não existe.");
                 _context.Entry(veiculo).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return Ok("Veículo atualizado!");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Veiculos.Any(e => e.Id == id)) return NotFound();
-                throw;
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentalSystem.Models
@@ -11,7 +12,7 @@ namespace RentalSystem.Models
 
         [Required]
         [StringLength(50)]
-        public string MetodoPagamento { get; set; } 
+        public string MetodoPagamento { get; set; } = string.Empty; 
 
         [Required]
         public decimal ValorPago { get; set; }
@@ -24,6 +25,7 @@ namespace RentalSystem.Models
         public int AluguelId { get; set; }
 
         [ForeignKey("AluguelId")]
-        public Aluguel Aluguel { get; set; }
+        [JsonIgnore]
+        public Aluguel? Aluguel { get; set; }
     }
 }

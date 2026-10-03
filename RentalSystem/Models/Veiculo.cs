@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentalSystem.Models
@@ -11,7 +12,7 @@ namespace RentalSystem.Models
 
         [Required]
         [StringLength(100)]
-        public string Modelo { get; set; }
+        public string Modelo { get; set; } = string.Empty;
 
         [Required]
         public int AnoFabricacao { get; set; }
@@ -24,8 +25,10 @@ namespace RentalSystem.Models
         public int FabricanteId { get; set; }
 
         [ForeignKey("FabricanteId")]
-        public Fabricante Fabricante { get; set; } // Navegação
+        [JsonIgnore]
+        public Fabricante? Fabricante { get; set; } // Navegação
 
-        public ICollection<Aluguel> Alugueis { get; set; }
+        [JsonIgnore]
+        public ICollection<Aluguel>? Alugueis { get; set; }
     }
 }
