@@ -29,7 +29,7 @@ Todo aluguel está atrelado a um cliente, um veículo em um dado período de tem
 
  
 
-Etapa 2: Implementação do Backend ⏳
+Etapa 2: Implementação do Backend ✅
 
 2.1. Desenvolva um backend em C# 6.0 (ou superior) utilizando o ASP.NET Core para criar APIs RESTful que irão interagir com o banco de dados.
 
@@ -43,7 +43,7 @@ Etapa 2: Implementação do Backend ⏳
 
  
 
-Etapa 3: Testes e Documentação ⏳
+Etapa 3: Testes e Documentação ✅
 
 3.1. Integre o Swagger ao projeto para documentar e testar as APIs desenvolvidas.
 
