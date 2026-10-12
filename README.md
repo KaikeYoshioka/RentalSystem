@@ -2,6 +2,8 @@
 
 Tema: Desenvolver um sistema de aluguel de veículos utilizando C# 6.0 (ou superior), Entity Framework, SQL Express como banco de dados e Swagger para testes.
 
+[![video de apresentação](docs/prints/thumbnail.jpg)](https://www.youtube.com/watch?v=ePM-24E5D4g)
+
 Requisitos:
 
 O trabalho será dividido em 4 etapas:
