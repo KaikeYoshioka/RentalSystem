@@ -108,7 +108,7 @@ async function salvarCliente(evento) {
   campos.nome.value = campos.nome.value.trim();
   campos.email.value = campos.email.value.trim();
   let ok = validarCampos(formCliente);
-  if (ok && !cpfValido(campos.cpf.value)) {
+  if (campos.cpf.checkValidity() && !cpfValido(campos.cpf.value)) {
     marcarInvalido(campos.cpf, "CPF inválido: confira os dígitos.");
     ok = false;
   }
