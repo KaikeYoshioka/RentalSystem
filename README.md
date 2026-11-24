@@ -65,3 +65,74 @@ Após a produção do vídeo demonstrativo, este deverá ser disponibilizado em 
 O link para o vídeo deverá ser inserido no relatório acadêmico, permitindo fácil acesso aos avaliadores e demais interessados.
 Certifique-se de que o vídeo esteja devidamente hospedado e acessível durante o período de avaliação do relatório.
 O tempo do vídeo deve variar entre 6 e 12 minutos, considerando a demonstação e uma breve explicação do sistema.
+
+---
+
+# Trabalho Prático 2 — Front-end integrado
+
+Front-end em **HTML, CSS, Bootstrap e JavaScript** (pasta `RentalSystem.Front/`), integrado à API do Trabalho
+Prático 1 **somente com `fetch`**. Nenhum dado é fixo no código: tudo vem do banco pela API.
+
+## Avaliação
+
+| Requisito | Onde |
+|---|---|
+| Usar os artefatos do Trabalho Prático 1 | mesma API (`RentalSystem/`), mesmas entidades e as 5 rotas de `/api/Filtros` |
+| Wireframes (Figma, média fidelidade, tons de cinza) | [RentalSystem – Wireframes Front-end (TP2)](https://www.figma.com/design/vmaOX85afT3DBG3QZUE7ro) |
+| Cadastro, edição, exclusão e pesquisa de todas as entidades | `fabricantes.html`, `veiculos.html`, `clientes.html`, `alugueis.html`, `pagamentos.html` |
+| Filtros personalizados em pelo menos dois campos por entidade | formulário de filtros de cada tela, enviado como *query string* para a API (tabela abaixo) |
+| Usar as rotas de consulta (JOINs) | `consultas.html` (as 5 rotas) e `index.html` (`alugueis-pendentes`) |
+| Pasta específica para o front-end | `RentalSystem.Front/` |
+
+## Como executar
+
+1. Rode a API como no Trabalho Prático 1 (Visual Studio, perfil **http**, ou `dotnet run --project RentalSystem`).
+   Ela sobe em **http://localhost:5127** (Swagger em `/swagger`).
+2. Abra `RentalSystem.Front/index.html` no navegador. Também funciona com a extensão *Live Server* do VS Code.
+
+Se a API estiver em outra porta, ajuste `urlBase` em `RentalSystem.Front/js/comum.js`.
+O Bootstrap e os ícones são carregados pela CDN do jsDelivr, então o navegador precisa de internet.
+
+## Telas
+
+| Tela | Arquivo | O que faz |
+|---|---|---|
+| Início | `index.html` + `js/inicio.js` | Indicadores (frota, clientes, aluguéis em aberto, total recebido) e aluguéis pendentes com atalho para registrar a devolução |
+| Fabricantes | `fabricantes.html` + `js/fabricantes.js` | CRUD, filtros por nome e por "possui veículos", quantidade de veículos de cada um |
+| Veículos | `veiculos.html` + `js/veiculos.js` | CRUD, filtros por modelo, fabricante, ano e km, situação (alugado/disponível) |
+| Clientes | `clientes.html` + `js/clientes.js` | CRUD com máscara e validação de CPF, filtros por nome, CPF e e-mail |
+| Aluguéis | `alugueis.html` + `js/alugueis.js` | CRUD, filtros por cliente, veículo, status e período, cálculo das diárias, **registro de devolução** (atualiza também a km do veículo) |
+| Pagamentos | `pagamentos.html` + `js/pagamentos.js` | CRUD, filtros por aluguel, método, valor e período, saldo do aluguel |
+| Consultas | `consultas.html` + `js/consultas.js` | As 5 rotas de `/api/Filtros`, com o SQL equivalente, busca no resultado e totais |
+
+Regras validadas no front antes de chamar a API: campos obrigatórios, CPF válido, ano de fabricação, devolução prevista
+não anterior ao início, km final não menor que a inicial, veículo com aluguel em aberto não pode ser alugado de novo,
+pagamento não pode passar do saldo do aluguel. Os erros devolvidos pela API (400, 404, 409, 500) aparecem na tela.
+
+## Alterações na API para o TP2
+
+- **CORS** liberado em `Program.cs` para o front-end conseguir chamar a API.
+- **Filtros nos GETs** (todos opcionais, combináveis):
+
+| Rota | Parâmetros |
+|---|---|
+| `GET /api/Fabricantes` | `nome`, `comVeiculos` (true/false) |
+| `GET /api/Veiculos` | `modelo`, `fabricanteId`, `anoMin`, `anoMax`, `kmMax` |
+| `GET /api/Clientes` | `nome`, `cpf`, `email` |
+| `GET /api/Alugueis` | `clienteId`, `veiculoId`, `status` (aberto/devolvido), `dataInicioDe`, `dataInicioAte` |
+| `GET /api/Pagamentos` | `aluguelId`, `metodo`, `valorMin`, `dataDe`, `dataAte` |
+
+- **Exclusão protegida (409 Conflict):** as chaves estrangeiras estão com exclusão em cascata. Por isso, excluir um
+  fabricante apagaria os veículos dele, e excluir um veículo apagaria os aluguéis e pagamentos ligados a ele. Agora a API
+  recusa a exclusão de fabricante com veículos, veículo ou cliente com aluguéis e aluguel com pagamentos.
+
+## Estrutura do front-end
+
+```
+RentalSystem.Front/
+  index.html, fabricantes.html, veiculos.html, clientes.html,
+  alugueis.html, pagamentos.html, consultas.html
+  css/style.css        tema (índigo e papel) sobre o Bootstrap 5
+  js/comum.js          URL da API, fetch, formatação (R$, datas, km), toasts, validação, modal de exclusão
+  js/<tela>.js         lógica de cada tela
+```
