@@ -28,12 +28,32 @@ namespace RentalSystem.Controllers
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
 
+        // Filtros: clienteId, veiculoId, status ("aberto" ou "devolvido") e período de início (dataInicioDe / dataInicioAte)
         [HttpGet]
-        public async Task<IActionResult> GetAlugueis()
+        public async Task<IActionResult> GetAlugueis(
+            [FromQuery] int? clienteId,
+            [FromQuery] int? veiculoId,
+            [FromQuery] string? status,
+            [FromQuery] DateTime? dataInicioDe,
+            [FromQuery] DateTime? dataInicioAte)
         {
             try
             {
-                var alugueis = await _context.Alugueis.ToListAsync();
+                var query = _context.Alugueis.AsQueryable();
+                if (clienteId.HasValue) query = query.Where(a => a.ClienteId == clienteId.Value);
+                if (veiculoId.HasValue) query = query.Where(a => a.VeiculoId == veiculoId.Value);
+                if (string.Equals(status, "aberto", StringComparison.OrdinalIgnoreCase))
+                    query = query.Where(a => a.DataDevolucao == null);
+                else if (string.Equals(status, "devolvido", StringComparison.OrdinalIgnoreCase))
+                    query = query.Where(a => a.DataDevolucao != null);
+                if (dataInicioDe.HasValue) query = query.Where(a => a.DataInicio >= dataInicioDe.Value);
+                if (dataInicioAte.HasValue)
+                {
+                    var limite = dataInicioAte.Value.Date.AddDays(1);
+                    query = query.Where(a => a.DataInicio < limite);
+                }
+
+                var alugueis = await query.OrderByDescending(a => a.DataInicio).ToListAsync();
                 return Ok(alugueis);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
@@ -74,6 +94,8 @@ namespace RentalSystem.Controllers
             {
                 var aluguel = await _context.Alugueis.FindAsync(id);
                 if (aluguel == null) return NotFound("Aluguel não encontrado.");
+                if (await _context.Pagamentos.AnyAsync(p => p.AluguelId == id))
+                    return Conflict("Não é possível excluir: o aluguel possui pagamentos registrados.");
                 _context.Alugueis.Remove(aluguel);
                 await _context.SaveChangesAsync();
                 return Ok("Aluguel removido!");
