@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cadastro, edição, devolução, exclusão e pesquisa de aluguéis.">
+  <meta name="theme-color" content="#1B2A4A">
+  <title>Aluguéis · RentalSystem</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="visually-hidden-focusable pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Navegação principal">
+      <div class="container">
+        <a class="logo" href="index.html">
+          <span class="logo-selo" aria-hidden="true"><i class="bi bi-car-front-fill"></i></span>
+          <span class="logo-nome">RentalSystem</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal"
+                aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menu">
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="menu-principal">
+          <ul class="navbar-nav nav-principal ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="fabricantes.html">Fabricantes</a></li>
+            <li class="nav-item"><a class="nav-link" href="veiculos.html">Veículos</a></li>
+            <li class="nav-item"><a class="nav-link" href="clientes.html">Clientes</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="alugueis.html">Aluguéis</a></li>
+            <li class="nav-item"><a class="nav-link" href="pagamentos.html">Pagamentos</a></li>
+            <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="conteudo" tabindex="-1" class="secao">
+    <div class="container">
+      <div class="cabecalho-secao">
+        <div>
+          <h1 class="titulo-secao">Aluguéis</h1>
+          <p class="subtitulo-secao" id="resumo-lista" aria-live="polite">Carregando…</p>
+        </div>
+        <button type="button" class="btn btn-primary" id="botao-novo"><i class="bi bi-plus-lg" aria-hidden="true"></i> Novo aluguel</button>
+      </div>
+
+      <form id="form-filtros" class="painel-filtros" role="search" aria-label="Filtros" novalidate>
+        <div class="row g-3 align-items-end">
+          <div class="col-lg-3 col-md-6">
+            <label for="filtro-clienteId" class="form-label">Cliente</label>
+            <select class="form-select" id="filtro-clienteId" name="clienteId" ><option value="">Todos</option></select>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <label for="filtro-veiculoId" class="form-label">Veículo</label>
+            <select class="form-select" id="filtro-veiculoId" name="veiculoId" ><option value="">Todos</option></select>
+          </div>
+          <div class="col-lg-2 col-md-4">
+            <label for="filtro-status" class="form-label">Status</label>
+            <select class="form-select" id="filtro-status" name="status" ><option value="">Todos</option><option value="aberto">Em aberto</option><option value="devolvido">Devolvidos</option></select>
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="filtro-dataInicioDe" class="form-label">Início a partir de</label>
+            <input type="date" class="form-control" id="filtro-dataInicioDe" name="dataInicioDe" autocomplete="off" >
+          </div>
+          <div class="col-lg-2 col-md-4 col-sm-6">
+            <label for="filtro-dataInicioAte" class="form-label">Início até</label>
+            <input type="date" class="form-control" id="filtro-dataInicioAte" name="dataInicioAte" autocomplete="off" >
+          </div>
+          <div class="col d-flex gap-2 justify-content-lg-end">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-funnel" aria-hidden="true"></i> Filtrar</button>
+            <button type="reset" class="btn btn-light"><i class="bi bi-x-circle" aria-hidden="true"></i> Limpar</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="table-responsive tabela-dados">
+        <table class="table align-middle mb-0">
+          <caption class="visually-hidden">Lista de aluguéis</caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Veículo</th>
+              <th scope="col">Início</th>
+              <th scope="col">Prev. devolução</th>
+              <th scope="col" class="text-end">Diária</th>
+              <th scope="col" class="text-end">Total</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="text-end">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="corpo-tabela"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+      <span>RentalSystem · Locadora de veículos</span>
+      <span>Front-end integrado à API ASP.NET Core (Trabalho Prático 2)</span>
+    </div>
+  </footer>
+
+  <div class="modal fade" id="modal-aluguel" tabindex="-1" aria-labelledby="titulo-modal-aluguel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <form class="modal-content" id="form-aluguel" novalidate>
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="modal-icone" aria-hidden="true"><i class="bi bi-key"></i></span>
+            <div>
+              <h2 class="modal-title" id="titulo-modal-aluguel">Novo aluguel</h2>
+              <p class="modal-subtitulo">Locação de um veículo para um cliente.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger erros-api d-none" role="alert"></div>
+          <p class="legenda-obrigatorio">Campos com <span class="obrigatorio">*</span> são obrigatórios.</p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="campo-clienteId" class="form-label">Cliente <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <select class="form-select" id="campo-clienteId" name="clienteId" required ></select>
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="campo-veiculoId" class="form-label">Veículo <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <select class="form-select" id="campo-veiculoId" name="veiculoId" required ></select>
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="campo-dataInicio" class="form-label">Data de início <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <input type="date" class="form-control" id="campo-dataInicio" name="dataInicio" required autocomplete="off" >
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="campo-dataFimPrevista" class="form-label">Devolução prevista <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <input type="date" class="form-control" id="campo-dataFimPrevista" name="dataFimPrevista" required autocomplete="off" >
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="campo-quilometragemInicial" class="form-label">Km inicial <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <div class="input-group has-validation"><input type="number" class="form-control" id="campo-quilometragemInicial" name="quilometragemInicial" required autocomplete="off" min="0" step="1"><span class="input-group-text">km</span><div class="invalid-feedback"></div></div>
+              <div class="form-text">Preenchida com a km atual do veículo.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="campo-valorDiaria" class="form-label">Valor da diária <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <div class="input-group has-validation"><span class="input-group-text">R$</span><input type="number" class="form-control" id="campo-valorDiaria" name="valorDiaria" required autocomplete="off" min="0.01" step="0.01" placeholder="0,00"><div class="invalid-feedback"></div></div>
+            </div>
+            <div class="col-12 d-none" id="grupo-encerramento"><hr class="my-1"><p class="fw-semibold mb-0">Devolução</p></div>
+            <div class="col-md-4 campo-encerramento d-none">
+              <label for="campo-dataDevolucao" class="form-label">Data da devolução</label>
+              <input type="date" class="form-control" id="campo-dataDevolucao" name="dataDevolucao" autocomplete="off" >
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-4 campo-encerramento d-none">
+              <label for="campo-quilometragemFinal" class="form-label">Km final</label>
+              <div class="input-group has-validation"><input type="number" class="form-control" id="campo-quilometragemFinal" name="quilometragemFinal" autocomplete="off" min="0" step="1"><span class="input-group-text">km</span><div class="invalid-feedback"></div></div>
+            </div>
+            <div class="col-md-4 campo-encerramento d-none">
+              <label for="campo-valorTotal" class="form-label">Valor total</label>
+              <div class="input-group has-validation"><span class="input-group-text">R$</span><input type="number" class="form-control" id="campo-valorTotal" name="valorTotal" autocomplete="off" min="0" step="0.01"><div class="invalid-feedback"></div></div>
+            </div>
+            <div class="col-12"><div class="caixa-calculo" id="estimativa" aria-live="polite">Preencha as datas e a diária para ver o valor estimado.</div></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary botao-salvar"><i class="bi bi-check-lg" aria-hidden="true"></i> Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal fade" id="modal-devolucao" tabindex="-1" aria-labelledby="titulo-modal-devolucao" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+      <form class="modal-content" id="form-devolucao" novalidate>
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="modal-icone" aria-hidden="true"><i class="bi bi-box-arrow-in-down"></i></span>
+            <div>
+              <h2 class="modal-title" id="titulo-modal-devolucao">Registrar devolução</h2>
+              <p class="modal-subtitulo">O valor total é calculado pelas diárias usadas.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger erros-api d-none" role="alert"></div>
+          <p class="legenda-obrigatorio">Campos com <span class="obrigatorio">*</span> são obrigatórios.</p>
+          <div class="row g-3">
+            <div class="col-12"><p class="mb-0" id="resumo-devolucao"></p></div>
+            <div class="col-md-6">
+              <label for="dev-dataDevolucao" class="form-label">Data da devolução <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <input type="date" class="form-control" id="dev-dataDevolucao" name="dataDevolucao" required autocomplete="off" >
+              <div class="invalid-feedback"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="dev-quilometragemFinal" class="form-label">Km final <span class="obrigatorio" aria-hidden="true">*</span></label>
+              <div class="input-group has-validation"><input type="number" class="form-control" id="dev-quilometragemFinal" name="quilometragemFinal" required autocomplete="off" min="0" step="1"><span class="input-group-text">km</span><div class="invalid-feedback"></div></div>
+            </div>
+            <div class="col-12"><div class="caixa-calculo" id="calculo-devolucao" aria-live="polite"></div></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary botao-salvar"><i class="bi bi-check-lg" aria-hidden="true"></i> Confirmar devolução</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmação de exclusão -->
+  <div class="modal fade" id="modal-excluir" tabindex="-1" aria-labelledby="titulo-modal-excluir" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-3">
+            <span class="modal-icone text-danger" aria-hidden="true"><i class="bi bi-trash3"></i></span>
+            <h2 class="modal-title" id="titulo-modal-excluir">Confirmar exclusão</h2>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-1">Tem certeza que deseja excluir <strong class="descricao-exclusao"></strong>?</p>
+          <p class="texto-mudo mb-0">Essa ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger botao-confirmar-exclusao"><i class="bi bi-trash3" aria-hidden="true"></i> Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/comum.js"></script>
+  <script src="js/alugueis.js"></script>
+</body>
+</html>
