@@ -22,7 +22,7 @@ async function carregarFabricantes() {
     let filtrado = Object.keys(filtros).length > 0;
     resumo.textContent = fabricantes.length === 0
       ? "Nenhum fabricante encontrado."
-      : fabricantes.length + (fabricantes.length === 1 ? " fabricante" : " fabricantes") + (filtrado ? " encontrados com os filtros aplicados." : " cadastrados.");
+      : fabricantes.length + (fabricantes.length === 1 ? " fabricante" : " fabricantes") + (filtrado ? (fabricantes.length === 1 ? " encontrado" : " encontrados") + " com os filtros aplicados." : (fabricantes.length === 1 ? " cadastrado." : " cadastrados."));
 
     if (fabricantes.length === 0) {
       corpo.innerHTML = linhaEstado(4, {

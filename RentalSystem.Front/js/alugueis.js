@@ -36,7 +36,7 @@ async function carregarAlugueis() {
     let abertos = alugueis.filter((a) => !a.dataDevolucao).length;
     resumo.textContent = alugueis.length === 0
       ? "Nenhum aluguel encontrado."
-      : alugueis.length + (alugueis.length === 1 ? " aluguel" : " aluguéis") + (filtrado ? " encontrados" : " registrados") + ", " + abertos + " em aberto.";
+      : alugueis.length + (alugueis.length === 1 ? " aluguel" : " aluguéis") + (filtrado ? (alugueis.length === 1 ? " encontrado" : " encontrados") : (alugueis.length === 1 ? " registrado" : " registrados")) + ", " + abertos + " em aberto.";
 
     if (alugueis.length === 0) {
       corpo.innerHTML = linhaEstado(9, {

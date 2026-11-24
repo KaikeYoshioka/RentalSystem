@@ -43,7 +43,7 @@ async function carregarClientes() {
     let filtrado = Object.keys(filtros).length > 0;
     resumo.textContent = clientes.length === 0
       ? "Nenhum cliente encontrado."
-      : clientes.length + (clientes.length === 1 ? " cliente" : " clientes") + (filtrado ? " encontrados com os filtros aplicados." : " cadastrados.");
+      : clientes.length + (clientes.length === 1 ? " cliente" : " clientes") + (filtrado ? (clientes.length === 1 ? " encontrado" : " encontrados") + " com os filtros aplicados." : (clientes.length === 1 ? " cadastrado." : " cadastrados."));
 
     if (clientes.length === 0) {
       corpo.innerHTML = linhaEstado(6, {

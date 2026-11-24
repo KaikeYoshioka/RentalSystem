@@ -35,7 +35,7 @@ async function carregarVeiculos() {
     let filtrado = Object.keys(filtros).length > 0;
     resumo.textContent = veiculos.length === 0
       ? "Nenhum veículo encontrado."
-      : veiculos.length + (veiculos.length === 1 ? " veículo" : " veículos") + (filtrado ? " encontrados com os filtros aplicados." : " na frota.");
+      : veiculos.length + (veiculos.length === 1 ? " veículo" : " veículos") + (filtrado ? (veiculos.length === 1 ? " encontrado" : " encontrados") + " com os filtros aplicados." : " na frota.");
 
     if (veiculos.length === 0) {
       corpo.innerHTML = linhaEstado(7, {

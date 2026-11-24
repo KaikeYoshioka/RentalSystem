@@ -93,6 +93,7 @@ h1, h2, h3, h4 { color: var(--rs-tinta); font-weight: 700; }
 .tabela-dados { margin-bottom: 1.5rem; }
 .tabela-dados th { font-size: .85rem; font-weight: 700; color: var(--rs-mudo); white-space: nowrap; background: var(--rs-cinza); }
 .tabela-dados td, .tabela-dados th { padding: .75rem 1rem; }
+.tabela-dados td { white-space: nowrap; }
 .tabela-dados tbody tr:last-child td { border-bottom: 0; }
 .tabela-acoes { white-space: nowrap; text-align: end; }
 .tabela-acoes .btn + .btn { margin-left: .25rem; }
