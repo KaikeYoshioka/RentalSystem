@@ -27,12 +27,29 @@ namespace RentalSystem.Controllers
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
 
+        // Filtros: aluguelId, metodo (contém), valorMin e período do pagamento (dataDe / dataAte)
         [HttpGet]
-        public async Task<IActionResult> GetPagamentos()
+        public async Task<IActionResult> GetPagamentos(
+            [FromQuery] int? aluguelId,
+            [FromQuery] string? metodo,
+            [FromQuery] decimal? valorMin,
+            [FromQuery] DateTime? dataDe,
+            [FromQuery] DateTime? dataAte)
         {
             try
             {
-                var pagamentos = await _context.Pagamentos.ToListAsync();
+                var query = _context.Pagamentos.AsQueryable();
+                if (aluguelId.HasValue) query = query.Where(p => p.AluguelId == aluguelId.Value);
+                if (!string.IsNullOrWhiteSpace(metodo)) query = query.Where(p => p.MetodoPagamento.Contains(metodo));
+                if (valorMin.HasValue) query = query.Where(p => p.ValorPago >= valorMin.Value);
+                if (dataDe.HasValue) query = query.Where(p => p.DataPagamento >= dataDe.Value);
+                if (dataAte.HasValue)
+                {
+                    var limite = dataAte.Value.Date.AddDays(1);
+                    query = query.Where(p => p.DataPagamento < limite);
+                }
+
+                var pagamentos = await query.OrderByDescending(p => p.DataPagamento).ToListAsync();
                 return Ok(pagamentos);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
