@@ -27,12 +27,25 @@ namespace RentalSystem.Controllers
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
 
+        // Filtros: modelo (contém), fabricanteId, anoMin, anoMax e kmMax
         [HttpGet]
-        public async Task<IActionResult> GetVeiculos()
+        public async Task<IActionResult> GetVeiculos(
+            [FromQuery] string? modelo,
+            [FromQuery] int? fabricanteId,
+            [FromQuery] int? anoMin,
+            [FromQuery] int? anoMax,
+            [FromQuery] int? kmMax)
         {
             try
             {
-                var veiculos = await _context.Veiculos.ToListAsync();
+                var query = _context.Veiculos.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(modelo)) query = query.Where(v => v.Modelo.Contains(modelo));
+                if (fabricanteId.HasValue) query = query.Where(v => v.FabricanteId == fabricanteId.Value);
+                if (anoMin.HasValue) query = query.Where(v => v.AnoFabricacao >= anoMin.Value);
+                if (anoMax.HasValue) query = query.Where(v => v.AnoFabricacao <= anoMax.Value);
+                if (kmMax.HasValue) query = query.Where(v => v.Quilometragem <= kmMax.Value);
+
+                var veiculos = await query.OrderBy(v => v.Modelo).ToListAsync();
                 return Ok(veiculos);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
@@ -72,6 +85,8 @@ namespace RentalSystem.Controllers
             {
                 var veiculo = await _context.Veiculos.FindAsync(id);
                 if (veiculo == null) return NotFound("Veículo não encontrado.");
+                if (await _context.Alugueis.AnyAsync(a => a.VeiculoId == id))
+                    return Conflict("Não é possível excluir: o veículo possui aluguéis registrados.");
                 _context.Veiculos.Remove(veiculo);
                 await _context.SaveChangesAsync();
                 return Ok("Veículo removido!");
