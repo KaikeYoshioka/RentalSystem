@@ -27,12 +27,18 @@ namespace RentalSystem.Controllers
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
 
+        // Filtros: nome, cpf e email (todos "contém")
         [HttpGet]
-        public async Task<IActionResult> GetClientes()
+        public async Task<IActionResult> GetClientes([FromQuery] string? nome, [FromQuery] string? cpf, [FromQuery] string? email)
         {
             try
             {
-                var clientes = await _context.Clientes.ToListAsync();
+                var query = _context.Clientes.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(nome)) query = query.Where(c => c.Nome.Contains(nome));
+                if (!string.IsNullOrWhiteSpace(cpf)) query = query.Where(c => c.Cpf.Contains(cpf));
+                if (!string.IsNullOrWhiteSpace(email)) query = query.Where(c => c.Email.Contains(email));
+
+                var clientes = await query.OrderBy(c => c.Nome).ToListAsync();
                 return Ok(clientes);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
@@ -72,6 +78,8 @@ namespace RentalSystem.Controllers
             {
                 var cliente = await _context.Clientes.FindAsync(id);
                 if (cliente == null) return NotFound("Cliente não encontrado.");
+                if (await _context.Alugueis.AnyAsync(a => a.ClienteId == id))
+                    return Conflict("Não é possível excluir: o cliente possui aluguéis registrados.");
                 _context.Clientes.Remove(cliente);
                 await _context.SaveChangesAsync();
                 return Ok("Cliente removido!");
