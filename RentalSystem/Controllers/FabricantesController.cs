@@ -26,12 +26,21 @@ namespace RentalSystem.Controllers
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
         }
 
+        // Filtros: nome (contém) e comVeiculos (true = só fabricantes com veículos, false = só sem veículos)
         [HttpGet]
-        public async Task<IActionResult> GetFabricantes()
+        public async Task<IActionResult> GetFabricantes([FromQuery] string? nome, [FromQuery] bool? comVeiculos)
         {
             try
             {
-                var fabricantes = await _context.Fabricantes.ToListAsync();
+                var query = _context.Fabricantes.AsQueryable();
+                if (!string.IsNullOrWhiteSpace(nome))
+                    query = query.Where(f => f.Nome.Contains(nome));
+                if (comVeiculos.HasValue)
+                    query = comVeiculos.Value
+                        ? query.Where(f => _context.Veiculos.Any(v => v.FabricanteId == f.Id))
+                        : query.Where(f => !_context.Veiculos.Any(v => v.FabricanteId == f.Id));
+
+                var fabricantes = await query.OrderBy(f => f.Nome).ToListAsync();
                 return Ok(fabricantes);
             }
             catch (Exception ex) { return StatusCode(500, $"Erro interno: {ex.Message}"); }
@@ -70,6 +79,8 @@ namespace RentalSystem.Controllers
             {
                 var fabricante = await _context.Fabricantes.FindAsync(id);
                 if (fabricante == null) return NotFound("Fabricante não encontrado.");
+                if (await _context.Veiculos.AnyAsync(v => v.FabricanteId == id))
+                    return Conflict("Não é possível excluir: o fabricante possui veículos cadastrados.");
                 _context.Fabricantes.Remove(fabricante);
                 await _context.SaveChangesAsync();
                 return Ok(new { mensagem = "Fabricante removido com sucesso!" });
