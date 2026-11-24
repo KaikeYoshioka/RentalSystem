@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# LaTeX (relatório)
+docs/relatorio/*.aux
+docs/relatorio/*.log
+docs/relatorio/*.out
+docs/relatorio/*.fls
+docs/relatorio/*.fdb_latexmk
+docs/relatorio/*.synctex.gz

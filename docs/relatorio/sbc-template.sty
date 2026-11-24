@@ -1,0 +1,58 @@
+% sbc-template.sty
+% Formatação no padrão dos artigos da Sociedade Brasileira de Computação (SBC):
+% A4, Times 12 pt, margens 3,5 cm (superior), 2,5 cm (inferior) e 3 cm (laterais),
+% título 16 pt em negrito, seções 13 pt, subseções 12 pt, resumo e abstract
+% recuados em itálico, legendas 10 pt.
+% Se o professor fornecer o sbc-template.sty oficial, basta substituir este arquivo.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sbc-template}[2026/11/24 Formato de artigos SBC]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage{mathptmx}
+\RequirePackage{courier}
+\RequirePackage[a4paper,top=3.5cm,bottom=2.5cm,left=3cm,right=3cm]{geometry}
+\RequirePackage{titlesec}
+\RequirePackage[font=small,labelfont=bf,labelsep=colon,justification=centering]{caption}
+
+% Parágrafos: recuo de 1,27 cm e 6 pt depois de cada parágrafo
+\setlength{\parindent}{1.27cm}
+\setlength{\parskip}{6pt}
+
+% Seções e subseções
+\titleformat{\section}{\fontsize{13}{15}\selectfont\bfseries}{\thesection.}{0.5em}{}
+\titlespacing*{\section}{0pt}{12pt}{0pt}
+\titleformat{\subsection}{\fontsize{12}{14}\selectfont\bfseries}{\thesubsection.}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{0pt}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection.}{0.5em}{}
+\titlespacing*{\subsubsection}{0pt}{8pt}{0pt}
+
+% Título, autores, endereço e e-mail
+\def\@address{}
+\def\@email{}
+\newcommand{\address}[1]{\gdef\@address{#1}}
+\newcommand{\email}[1]{\gdef\@email{#1}}
+
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\fontsize{16}{19}\selectfont\bfseries \@title\par}
+    \vspace{12pt}
+    {\normalsize\bfseries \@author\par}
+    \vspace{12pt}
+    {\normalsize \@address\par}
+    \ifx\@email\@empty\else{\small\ttfamily \@email\par}\fi
+  \end{center}
+  \vspace{6pt}
+  \thispagestyle{plain}
+}
+
+% Abstract e Resumo: recuo de 0,8 cm dos dois lados, em itálico
+\renewenvironment{abstract}%
+  {\begin{list}{}{\setlength{\leftmargin}{0.8cm}\setlength{\rightmargin}{0.8cm}%
+   \setlength{\topsep}{0pt}}\item\relax\itshape\noindent\textbf{Abstract.}\ }%
+  {\end{list}\vspace{6pt}}
+\newenvironment{resumo}%
+  {\begin{list}{}{\setlength{\leftmargin}{0.8cm}\setlength{\rightmargin}{0.8cm}%
+   \setlength{\topsep}{0pt}}\item\relax\itshape\noindent\textbf{Resumo.}\ }%
+  {\end{list}\vspace{6pt}}
+
+\endinput
