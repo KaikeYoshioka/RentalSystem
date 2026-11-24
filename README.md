@@ -83,6 +83,7 @@ Prático 1 **somente com `fetch`**. Nenhum dado é fixo no código: tudo vem do 
 | Filtros personalizados em pelo menos dois campos por entidade | formulário de filtros de cada tela, enviado como *query string* para a API (tabela abaixo) |
 | Usar as rotas de consulta (JOINs) | `consultas.html` (as 5 rotas) e `index.html` (`alugueis-pendentes`) |
 | Pasta específica para o front-end | `RentalSystem.Front/` |
+| Relatório (modelo SBC) | `docs/relatorio/relatorio.pdf` (fonte LaTeX em `docs/relatorio/relatorio.tex`) |
 
 ## Como executar
 
