@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Painel da locadora de veículos RentalSystem.">
+  <meta name="theme-color" content="#1B2A4A">
+  <title>Início · RentalSystem</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="visually-hidden-focusable pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Navegação principal">
+      <div class="container">
+        <a class="logo" href="index.html">
+          <span class="logo-selo" aria-hidden="true"><i class="bi bi-car-front-fill"></i></span>
+          <span class="logo-nome">RentalSystem</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal"
+                aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menu">
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="menu-principal">
+          <ul class="navbar-nav nav-principal ms-auto">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Início</a></li>
+            <li class="nav-item"><a class="nav-link" href="fabricantes.html">Fabricantes</a></li>
+            <li class="nav-item"><a class="nav-link" href="veiculos.html">Veículos</a></li>
+            <li class="nav-item"><a class="nav-link" href="clientes.html">Clientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="alugueis.html">Aluguéis</a></li>
+            <li class="nav-item"><a class="nav-link" href="pagamentos.html">Pagamentos</a></li>
+            <li class="nav-item"><a class="nav-link" href="consultas.html">Consultas</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="conteudo" tabindex="-1" class="secao">
+    <div class="container">
+      <div class="cabecalho-secao">
+        <div>
+          <h1 class="titulo-secao">Painel da locadora</h1>
+          <p class="subtitulo-secao" id="resumo-painel" aria-live="polite">Carregando…</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="alugueis.html?novo"><i class="bi bi-key" aria-hidden="true"></i> Novo aluguel</a>
+          <a class="btn btn-outline-primary" href="clientes.html?novo"><i class="bi bi-person-plus" aria-hidden="true"></i> Novo cliente</a>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4" id="indicadores">
+        <div class="col-lg-3 col-sm-6"><div class="cartao-indicador"><div class="rotulo"><i class="bi bi-car-front" aria-hidden="true"></i> Veículos na frota</div><div class="valor" id="ind-veiculos">—</div><div class="texto-mudo" id="ind-veiculos-extra"></div></div></div>
+        <div class="col-lg-3 col-sm-6"><div class="cartao-indicador"><div class="rotulo"><i class="bi bi-people" aria-hidden="true"></i> Clientes</div><div class="valor" id="ind-clientes">—</div><div class="texto-mudo" id="ind-clientes-extra"></div></div></div>
+        <div class="col-lg-3 col-sm-6"><div class="cartao-indicador"><div class="rotulo"><i class="bi bi-key" aria-hidden="true"></i> Aluguéis em aberto</div><div class="valor" id="ind-abertos">—</div><div class="texto-mudo" id="ind-abertos-extra"></div></div></div>
+        <div class="col-lg-3 col-sm-6"><div class="cartao-indicador"><div class="rotulo"><i class="bi bi-cash-coin" aria-hidden="true"></i> Total recebido</div><div class="valor" id="ind-recebido">—</div><div class="texto-mudo" id="ind-recebido-extra"></div></div></div>
+      </div>
+
+      <section class="painel">
+        <div class="d-flex flex-wrap justify-content-between align-items-baseline gap-2 mb-2">
+          <h2 class="titulo-painel mb-0">Aluguéis em aberto</h2>
+          <span class="consulta-rota">GET /api/Filtros/alugueis-pendentes</span>
+        </div>
+        <div class="table-responsive tabela-dados mb-0">
+          <table class="table align-middle mb-0">
+            <caption class="visually-hidden">Aluguéis ainda não devolvidos</caption>
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Veículo</th>
+                <th scope="col">Devolução prevista</th>
+                <th scope="col">Situação</th>
+                <th scope="col" class="text-end">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="corpo-pendentes"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="painel">
+        <h2 class="titulo-painel">Atalhos</h2>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-light" href="veiculos.html"><i class="bi bi-car-front" aria-hidden="true"></i> Veículos</a>
+          <a class="btn btn-light" href="fabricantes.html"><i class="bi bi-buildings" aria-hidden="true"></i> Fabricantes</a>
+          <a class="btn btn-light" href="pagamentos.html"><i class="bi bi-cash-coin" aria-hidden="true"></i> Pagamentos</a>
+          <a class="btn btn-light" href="consultas.html"><i class="bi bi-diagram-3" aria-hidden="true"></i> Consultas</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="container d-flex flex-wrap justify-content-between gap-2">
+      <span>RentalSystem · Locadora de veículos</span>
+      <span>Front-end integrado à API ASP.NET Core (Trabalho Prático 2)</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/comum.js"></script>
+  <script src="js/inicio.js"></script>
+</body>
+</html>
