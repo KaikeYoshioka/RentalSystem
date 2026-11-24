@@ -1,0 +1,145 @@
+/* =========================================================
+   RentalSystem — front-end da locadora de veículos
+   Paleta: índigo + papel. Bordas finas, raio pequeno, sem sombras.
+   ========================================================= */
+
+:root {
+  --rs-acento: #1B2A4A;
+  --rs-acento-rgb: 27, 42, 74;
+  --rs-acento-claro: #2C4170;
+  --rs-acento-suave: #EEF0F5;
+  --rs-fundo: #FBFBFA;
+  --rs-superficie: #FFFFFF;
+  --rs-tinta: #1D1F24;
+  --rs-texto: #3A3D45;
+  --rs-mudo: #6B7079;
+  --rs-linha: #DCDDE1;
+  --rs-borda: #E7E8EB;
+  --rs-cinza: #F1F2F4;
+  --rs-perigo: #C8372D;
+  --rs-ok: #2F6B4F;
+  --rs-alerta: #9A5B13;
+
+  --bs-body-font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bs-body-bg: var(--rs-fundo);
+  --bs-body-color: var(--rs-texto);
+  --bs-border-radius: 4px;
+  --bs-border-radius-sm: 3px;
+  --bs-border-radius-lg: 6px;
+  --bs-primary: var(--rs-acento);
+  --bs-primary-rgb: var(--rs-acento-rgb);
+  --bs-link-color-rgb: var(--rs-acento-rgb);
+  --bs-focus-ring-color: rgba(var(--rs-acento-rgb), .35);
+}
+
+body { min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; }
+h1, h2, h3, h4 { color: var(--rs-tinta); font-weight: 700; }
+:focus-visible { outline: 2px solid var(--rs-acento); outline-offset: 2px; }
+
+.pular-conteudo { position: absolute; top: .5rem; left: .5rem; z-index: 2000; padding: .5rem 1rem; background: var(--rs-acento); color: #fff; }
+
+/* ---------- Botões ---------- */
+.btn { --bs-btn-font-weight: 600; }
+.btn-primary {
+  --bs-btn-bg: var(--rs-acento); --bs-btn-border-color: var(--rs-acento);
+  --bs-btn-hover-bg: var(--rs-acento-claro); --bs-btn-hover-border-color: var(--rs-acento-claro);
+  --bs-btn-active-bg: #111C33; --bs-btn-active-border-color: #111C33;
+  --bs-btn-disabled-bg: var(--rs-acento); --bs-btn-disabled-border-color: var(--rs-acento);
+}
+.btn-outline-primary {
+  --bs-btn-color: var(--rs-acento); --bs-btn-border-color: #C9CEDB;
+  --bs-btn-hover-bg: var(--rs-acento); --bs-btn-hover-border-color: var(--rs-acento);
+  --bs-btn-active-bg: var(--rs-acento); --bs-btn-active-border-color: var(--rs-acento);
+}
+.btn-light { --bs-btn-bg: var(--rs-cinza); --bs-btn-border-color: var(--rs-linha); }
+.btn-outline-danger { --bs-btn-border-color: #E8B4AF; --bs-btn-hover-bg: var(--rs-perigo); --bs-btn-hover-border-color: var(--rs-perigo); }
+
+/* ---------- Cabeçalho ---------- */
+.site-header { background: var(--rs-acento); }
+.site-header .navbar { --bs-navbar-color: rgba(255,255,255,.72); --bs-navbar-hover-color: #fff; --bs-navbar-active-color: #fff; padding: .6rem 0; }
+.site-header .navbar-toggler { color: #fff; border-color: rgba(255,255,255,.3); }
+.logo { display: flex; align-items: center; gap: .6rem; color: #fff; text-decoration: none; }
+.logo:hover { color: #fff; }
+.logo-selo { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 4px; background: #fff; color: var(--rs-acento); font-size: 1.2rem; }
+.logo-nome { font-size: 1.2rem; font-weight: 800; letter-spacing: .01em; }
+.nav-principal .nav-link { font-weight: 500; position: relative; }
+.nav-principal .nav-link.active { font-weight: 700; }
+@media (min-width: 992px) {
+  .nav-principal .nav-link.active::after {
+    content: ""; position: absolute; left: var(--bs-navbar-nav-link-padding-x); right: var(--bs-navbar-nav-link-padding-x);
+    bottom: -.15rem; height: 2px; background: #fff;
+  }
+}
+
+/* ---------- Seções ---------- */
+.secao { padding: 2rem 0 3rem; }
+.cabecalho-secao {
+  display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--rs-linha); position: relative;
+}
+.cabecalho-secao::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 2.5rem; height: 2px; background: var(--rs-acento); }
+.titulo-secao { font-size: 1.75rem; font-weight: 800; margin: 0; }
+.subtitulo-secao { margin: .25rem 0 0; color: var(--rs-mudo); }
+
+/* ---------- Painéis e tabelas ---------- */
+.painel-filtros, .painel, .tabela-dados, .cartao-indicador {
+  background: var(--rs-superficie); border: 1px solid var(--rs-borda); border-radius: 4px;
+}
+.painel-filtros, .painel { padding: 1.25rem; margin-bottom: 1.5rem; }
+.painel-filtros .form-label, .painel .form-label { font-weight: 600; font-size: .875rem; color: var(--rs-tinta); }
+.titulo-painel { font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; }
+
+.tabela-dados { margin-bottom: 1.5rem; }
+.tabela-dados th { font-size: .85rem; font-weight: 700; color: var(--rs-mudo); white-space: nowrap; background: var(--rs-cinza); }
+.tabela-dados td, .tabela-dados th { padding: .75rem 1rem; }
+.tabela-dados tbody tr:last-child td { border-bottom: 0; }
+.tabela-acoes { white-space: nowrap; text-align: end; }
+.tabela-acoes .btn + .btn { margin-left: .25rem; }
+.texto-mudo { color: var(--rs-mudo); font-size: .85rem; }
+.id-registro { color: var(--rs-mudo); font-variant-numeric: tabular-nums; }
+
+/* ---------- Status ---------- */
+.status { display: inline-flex; align-items: center; gap: .3rem; padding: .15rem .55rem; border-radius: 999px; font-size: .8rem; font-weight: 600; white-space: nowrap; }
+.status-aberto { background: var(--rs-acento-suave); color: var(--rs-acento); }
+.status-atrasado { background: #FDECEA; color: var(--rs-perigo); }
+.status-devolvido { background: #E9F3EE; color: var(--rs-ok); }
+
+/* ---------- Indicadores (Início) ---------- */
+.cartao-indicador { padding: 1.1rem 1.25rem; height: 100%; }
+.cartao-indicador .rotulo { font-size: .85rem; color: var(--rs-mudo); display: flex; align-items: center; gap: .4rem; }
+.cartao-indicador .valor { font-size: 1.75rem; font-weight: 800; color: var(--rs-tinta); line-height: 1.2; margin-top: .25rem; }
+
+/* ---------- Consultas ---------- */
+.abas-consulta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.25rem; }
+.consulta-rota { display: inline-block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .8rem; background: var(--rs-cinza); padding: .15rem .45rem; border-radius: 3px; color: var(--rs-texto); }
+.consulta-sql { background: var(--rs-acento); color: #E6E9F0; border-radius: 4px; padding: .75rem 1rem; font-size: .8rem; overflow-x: auto; margin: .75rem 0 1rem; white-space: pre; }
+
+/* ---------- Estados (vazio / erro / carregando) ---------- */
+.estado { padding: 2.5rem 1.5rem; text-align: center; }
+.estado-icone { display: inline-grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: .75rem; border-radius: 50%; background: var(--rs-acento-suave); color: var(--rs-acento); font-size: 1.5rem; }
+.estado-erro .estado-icone { background: #FDECEA; color: var(--rs-perigo); }
+.estado-titulo { font-size: 1.1rem; font-weight: 700; color: var(--rs-tinta); margin-bottom: .3rem; }
+.estado-texto { max-width: 34rem; margin: 0 auto; color: var(--rs-mudo); }
+
+/* ---------- Modais e formulários ---------- */
+.modal-content { border-radius: 6px; border: 0; box-shadow: 0 24px 48px -16px rgba(var(--rs-acento-rgb), .35); }
+.modal-title { font-size: 1.2rem; font-weight: 700; }
+.modal-subtitulo { margin: 0; font-size: .875rem; color: var(--rs-mudo); }
+.modal-icone { display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 4px; background: var(--rs-acento-suave); color: var(--rs-acento); font-size: 1.2rem; flex: none; }
+.modal-footer { background: var(--rs-fundo); }
+.modal-backdrop { --bs-backdrop-bg: #0E1628; }
+.legenda-obrigatorio { font-size: .8rem; color: var(--rs-mudo); }
+.obrigatorio { color: var(--rs-perigo); }
+.form-control:focus, .form-select:focus { border-color: var(--rs-acento); box-shadow: 0 0 0 .2rem rgba(var(--rs-acento-rgb), .15); }
+.input-group-text { background: var(--rs-cinza); }
+.caixa-calculo { background: var(--rs-acento-suave); border-radius: 4px; padding: .75rem 1rem; font-size: .9rem; color: var(--rs-acento); }
+.caixa-calculo strong { font-size: 1.05rem; }
+
+/* ---------- Toasts ---------- */
+.toast-rs { --bs-toast-bg: var(--rs-acento); --bs-toast-color: #fff; --bs-toast-border-radius: 4px; border: 0; }
+.toast-rs.toast-erro { --bs-toast-bg: var(--rs-perigo); }
+.toast-icone { margin-right: .5rem; }
+
+/* ---------- Rodapé ---------- */
+.rodape { border-top: 1px solid var(--rs-linha); padding: 1.25rem 0; font-size: .85rem; color: var(--rs-mudo); }
